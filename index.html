@@ -22,31 +22,41 @@
       <h1 id="page-title">Keep your knowledge<br><span>in working order.</span></h1>
       <p class="intro-copy">Think first. Reveal the answer. Build your intuition for deep learning and LLMs, one question at a time.</p>
       <div class="bank-stats" aria-label="Question bank contents">
-        <span><strong>35</strong> concept cards</span>
-        <span><strong>15</strong> coding exercises</span>
-        <span><strong>04</strong> topics</span>
+        <span><strong>65</strong> concept cards</span>
+        <span><strong>35</strong> coding exercises</span>
+        <span><strong>07</strong> topics</span>
       </div>
     </section>
     <nav class="view-nav" aria-label="Practice views">
       <button type="button" id="today-button" aria-pressed="true" aria-controls="today-view">Today’s practice</button>
       <button type="button" id="archive-button" aria-pressed="false" aria-controls="archive-view">Topic archive</button>
+      <button type="button" id="practiced-button" aria-pressed="false" aria-controls="practiced-view">Practiced</button>
     </nav>
     <section id="today-view" aria-labelledby="today-title">
       <div class="section-heading">
         <div><p class="eyebrow" id="today-date"></p><h2 id="today-title">Today’s practice</h2></div>
-        <p>3 concept cards + 1 coding exercise</p>
+        <p>4 concept cards + 2 coding exercises</p>
       </div>
-      <p class="section-note">The selection changes each day. Questions return as the bank rotates.</p>
+      <p class="section-note">Each day: 2 basic deep learning Q&As, 2 LLM Q&As, 1 basic deep learning coding exercise, and 1 LLM coding exercise. The LLM rotation includes transformers and RL.</p>
       <div class="question-list" id="today-questions"></div>
     </section>
     <section id="archive-view" aria-labelledby="archive-title" hidden>
       <div class="section-heading">
-        <div><p class="eyebrow">ALL 50 QUESTIONS</p><h2 id="archive-title">Topic archive</h2></div>
+        <div><p class="eyebrow">ALL 100 QUESTIONS</p><h2 id="archive-title">Topic archive</h2></div>
         <p id="archive-count" aria-live="polite"></p>
       </div>
       <p class="section-note">Revisit any question, including ones from previous daily selections.</p>
       <div id="topic-filters" class="topic-filters" aria-label="Filter by topic"></div>
       <div class="question-list" id="archive-questions"></div>
+    </section>
+    <section id="practiced-view" aria-labelledby="practiced-title" hidden>
+      <div class="section-heading">
+        <div><p class="eyebrow">YOUR PRACTICE HISTORY</p><h2 id="practiced-title">Practiced</h2></div>
+        <p id="practiced-count" aria-live="polite"></p>
+      </div>
+      <p class="section-note" id="practiced-storage-note"></p>
+      <p id="practiced-empty">No practiced questions yet. Check a question in Today’s practice to save it here.</p>
+      <div class="question-list" id="practiced-questions"></div>
     </section>
     <noscript><p class="noscript">Enable JavaScript to load the question bank and reveal answers.</p></noscript>
   </main>

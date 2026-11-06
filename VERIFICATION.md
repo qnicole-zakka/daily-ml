@@ -1,3 +1,15 @@
+# Current update verification
+
+Verified on November 5, 2026 using JavaScript DOM simulation and Python execution.
+
+- Bank: 100 unique questions, 65 concept Q&As and 35 coding exercises. Added 15 RL-for-LLMs Q&As, 15 LLM fundamentals Q&As, and 20 standard-Python LLM coding exercises.
+- Daily selection: 2 basic deep learning Q&As, 2 LLM Q&As, 1 basic deep learning coding exercise, and 1 LLM coding exercise. The LLM pool includes every topic outside basic deep learning. Selection was checked across 140 simulated dates before the Practiced addition.
+- Practiced: checked daily questions appear in the new tab; unchecking removes them and updates the daily checkbox. Checked IDs persist across reloads using browser local storage. Verified empty state, tab navigation, malformed storage recovery, and in-session fallback when saving is blocked.
+- Syntax: JavaScript syntax checks pass; all Python starter and solution snippets parse. All 20 new solution scripts pass their included assertions. Existing PyTorch solutions were not rerun for this update.
+- Browser layout and real-browser interaction have not been verified for this update. Checks above use a minimal simulated DOM.
+
+## Earlier baseline verification (before this update)
+
 # Question-bank verification
 
 Verified on November 4, 2026.

@@ -651,5 +651,675 @@ window.QUESTION_BANK = [
       "Cached tensors preserve the original keys and values in token order.",
       "Incremental outputs match full causal attention, including the first token’s output."
     ]
+  },
+  {
+    "id": "q51",
+    "type": "qa",
+    "topic": "RL for LLMs",
+    "title": "Tokens as actions",
+    "prompt": "In token-level RL for an LLM, what are the state, action, policy, and episode?",
+    "answer": [
+      "The state is the prompt plus generated prefix. An action is the next token, sampled from the model policy. An episode ends at a stop token or length limit. Rewards may arrive per token or only after the completion; the chosen termination rule affects the learning problem."
+    ],
+    "takeaway": "Define the trajectory and termination rule before defining the reward."
+  },
+  {
+    "id": "q52",
+    "type": "qa",
+    "topic": "RL for LLMs",
+    "title": "Why subtract a baseline?",
+    "prompt": "Why does REINFORCE often subtract a state-dependent baseline from returns?",
+    "answer": [
+      "A baseline independent of the sampled action has zero expected contribution when multiplied by the policy score gradient. Subtracting it can reduce variance without changing the expected policy gradient. An inaccurate baseline may fail to reduce variance; an action-dependent baseline needs a correction."
+    ],
+    "takeaway": "A state-only baseline preserves the expected policy gradient."
+  },
+  {
+    "id": "q53",
+    "type": "qa",
+    "topic": "RL for LLMs",
+    "title": "Reward versus advantage",
+    "prompt": "How does an advantage differ from a raw reward?",
+    "answer": [
+      "A reward is feedback at a step. An advantage estimates how much better an action is than the policy’s expected outcome in that state, typically using returns or a critic. A positive reward can still produce negative advantage when the state baseline is higher."
+    ],
+    "takeaway": "Advantage compares an action to an expected outcome."
+  },
+  {
+    "id": "q54",
+    "type": "qa",
+    "topic": "RL for LLMs",
+    "title": "Terminal reward credit",
+    "prompt": "How can a completion-level reward train earlier tokens?",
+    "answer": [
+      "Policy-gradient training weights the log probability gradient of sampled actions by a return or advantage. A terminal reward can therefore affect every preceding token. This credit assignment is noisy: a good completion does not establish that every token was helpful."
+    ],
+    "takeaway": "Sequence rewards provide noisy token-level credit."
+  },
+  {
+    "id": "q55",
+    "type": "qa",
+    "topic": "RL for LLMs",
+    "title": "PPO importance ratios",
+    "prompt": "What does the ratio exp(log pi_new minus log pi_old) measure in PPO?",
+    "answer": [
+      "It compares the current policy probability of the sampled action with its probability under the rollout policy, conditioned on the same prefix. A ratio above one means that action became more likely. The denominator must come from the actual behavior policy used to collect the rollout."
+    ],
+    "takeaway": "Keep rollout log probabilities fixed during PPO updates."
+  },
+  {
+    "id": "q56",
+    "type": "qa",
+    "topic": "RL for LLMs",
+    "title": "What clipping guarantees",
+    "prompt": "Does the PPO clipped objective guarantee a maximum KL divergence?",
+    "answer": [
+      "No. The minimum of clipped and unclipped advantage terms limits some incentives to change sampled action probabilities. It is not a hard trust region or a global KL bound. Monitor policy drift and use suitable update counts, learning rates, or KL-based stopping."
+    ],
+    "takeaway": "PPO clipping is a surrogate objective, not a hard KL constraint."
+  },
+  {
+    "id": "q57",
+    "type": "qa",
+    "topic": "RL for LLMs",
+    "title": "Reference versus rollout policy",
+    "prompt": "Why might RL training keep both a reference policy and an old policy?",
+    "answer": [
+      "The old policy generated the rollouts and supplies importance-ratio denominators. A reference policy anchors behavior through a divergence penalty, often relative to an SFT checkpoint. They serve different roles and need not be identical after training progresses."
+    ],
+    "takeaway": "The rollout policy corrects sampling; the reference policy anchors behavior."
+  },
+  {
+    "id": "q58",
+    "type": "qa",
+    "topic": "RL for LLMs",
+    "title": "Reward hacking",
+    "prompt": "A reward score improves while human judgments worsen. What should you investigate?",
+    "answer": [
+      "The policy may exploit weaknesses in the reward model or evaluator, such as verbosity or formatting shortcuts. Inspect high-scoring failures, use held-out human judgments and diverse tasks, and revise the reward or constraints. Optimizing a proxy can amplify its errors."
+    ],
+    "takeaway": "Evaluate the intended behavior independently of the optimized reward."
+  },
+  {
+    "id": "q59",
+    "type": "qa",
+    "topic": "RL for LLMs",
+    "title": "Group-relative advantages",
+    "prompt": "Why normalize rewards across multiple responses to the same prompt?",
+    "answer": [
+      "Within-prompt comparisons can remove prompt difficulty effects and provide a baseline without a separate value model. They need several sampled responses and depend on reward variation. If every response receives the same reward, the centered group signal is zero; a small epsilon only prevents division by zero."
+    ],
+    "takeaway": "Group-relative learning needs useful within-prompt reward differences."
+  },
+  {
+    "id": "q60",
+    "type": "qa",
+    "topic": "RL for LLMs",
+    "title": "Sparse verifier rewards",
+    "prompt": "What are strengths and limitations of using test outcomes as coding rewards?",
+    "answer": [
+      "Executable tests provide repeatable feedback for tested behavior and can reduce subjective grading. Incomplete tests miss errors, and insecure execution can be dangerous. Use isolated execution and held-out tests; passing visible tests does not prove general correctness."
+    ],
+    "takeaway": "A verifier is only as complete as its checks."
+  },
+  {
+    "id": "q61",
+    "type": "qa",
+    "topic": "RL for LLMs",
+    "title": "DPO data assumptions",
+    "prompt": "What does DPO learn from a chosen and rejected completion pair?",
+    "answer": [
+      "DPO increases the relative preference margin under the policy compared with a reference policy using a logistic objective. It uses offline pairs rather than collecting reward-model rollouts in the basic setup. Label noise, response style confounds, and coverage of the preference dataset still matter."
+    ],
+    "takeaway": "Preference pairs encode a relative training signal with dataset limitations."
+  },
+  {
+    "id": "q62",
+    "type": "qa",
+    "topic": "RL for LLMs",
+    "title": "KL direction matters",
+    "prompt": "Why distinguish KL(policy || reference) from KL(reference || policy)?",
+    "answer": [
+      "KL is asymmetric. The first averages log probability ratios under policy samples; the second averages under reference samples. They weight regions differently and require different sampling or estimators. State the direction and reduction before comparing reported penalties."
+    ],
+    "takeaway": "Name the sampling distribution when reporting KL."
+  },
+  {
+    "id": "q63",
+    "type": "qa",
+    "topic": "RL for LLMs",
+    "title": "Truncation and termination",
+    "prompt": "Why distinguish a true terminal state from a rollout cut off by a time limit?",
+    "answer": [
+      "At a true terminal state there is no future return, so a critic bootstrap is usually zero. At an artificial collection boundary, the underlying process may continue, so bootstrapping can be appropriate. For capped text generation, explicitly define whether reaching the cap is terminal in the task."
+    ],
+    "takeaway": "Bootstrap according to task semantics, not just a batch boundary."
+  },
+  {
+    "id": "q64",
+    "type": "qa",
+    "topic": "RL for LLMs",
+    "title": "On-policy freshness",
+    "prompt": "Why can reusing old rollouts for many updates destabilize policy optimization?",
+    "answer": [
+      "As the policy changes, the rollout distribution becomes stale. Importance weighting can correct expectations under suitable support assumptions, but large ratios increase variance and clipping introduces bias. Limit reuse and monitor ratios and KL rather than assuming old samples remain representative."
+    ],
+    "takeaway": "More reuse trades sampling efficiency against distribution drift."
+  },
+  {
+    "id": "q65",
+    "type": "qa",
+    "topic": "RL for LLMs",
+    "title": "Length bias in rewards",
+    "prompt": "How can a reward pipeline accidentally favor longer responses?",
+    "answer": [
+      "Summed token rewards or log-probability terms scale with length, and a learned judge may prefer verbosity. Inspect reward versus length, control comparisons for length, and choose sequence or token reductions intentionally. Length normalization changes the objective and is not always the right fix."
+    ],
+    "takeaway": "Audit length effects before interpreting reward gains."
+  },
+  {
+    "id": "q66",
+    "type": "qa",
+    "topic": "LLM fundamentals",
+    "title": "Tokenizer boundaries",
+    "prompt": "Why can concatenating separately tokenized strings differ from tokenizing their concatenation?",
+    "answer": [
+      "Subword tokenization depends on surrounding bytes or characters, including whitespace. A boundary can merge or split pieces differently. Build the complete formatted conversation before tokenizing when the template expects it, and verify special token handling."
+    ],
+    "takeaway": "Token boundaries depend on context and formatting."
+  },
+  {
+    "id": "q67",
+    "type": "qa",
+    "topic": "LLM fundamentals",
+    "title": "Perplexity comparisons",
+    "prompt": "When is comparing perplexity across two LLMs misleading?",
+    "answer": [
+      "Perplexity is exp(mean token negative log likelihood), so it depends on tokenizer, corpus, preprocessing, and which tokens are scored. Different token units make raw values hard to compare. Use a common evaluation protocol and consider byte-normalized likelihood where appropriate."
+    ],
+    "takeaway": "Perplexity needs matched tokenization and scoring conditions."
+  },
+  {
+    "id": "q68",
+    "type": "qa",
+    "topic": "LLM fundamentals",
+    "title": "Exposure bias",
+    "prompt": "What mismatch exists between teacher forcing and autoregressive generation?",
+    "answer": [
+      "Teacher forcing conditions on gold prefixes; generation conditions on the model’s sampled prefixes. Mistakes can create prefixes rarely seen in training and compound downstream. Evaluate generated sequences in addition to teacher-forced loss."
+    ],
+    "takeaway": "Low teacher-forced loss does not fully characterize generation."
+  },
+  {
+    "id": "q69",
+    "type": "qa",
+    "topic": "LLM fundamentals",
+    "title": "Position extrapolation",
+    "prompt": "Why does accepting a longer input not prove reliable long-context reasoning?",
+    "answer": [
+      "The implementation may support a larger position range while attention patterns or positional representations generalize poorly beyond training lengths. Evaluate retrieval and reasoning at multiple positions and lengths, including distractors and evidence near the middle."
+    ],
+    "takeaway": "Context capacity and effective context use are separate measurements."
+  },
+  {
+    "id": "q70",
+    "type": "qa",
+    "topic": "LLM fundamentals",
+    "title": "RAG chunk boundaries",
+    "prompt": "How do chunk size and overlap affect retrieval-augmented generation?",
+    "answer": [
+      "Small chunks can improve precision but lose context; large chunks preserve context but add irrelevant material and consume the context budget. Overlap can preserve boundary information but duplicates evidence. Tune using retrieval relevance and final answer quality on representative questions."
+    ],
+    "takeaway": "Tune retrieval chunks against downstream answers."
+  },
+  {
+    "id": "q71",
+    "type": "qa",
+    "topic": "LLM fundamentals",
+    "title": "Retrieval failure or generation failure",
+    "prompt": "How would you separate retrieval errors from answer-generation errors in RAG?",
+    "answer": [
+      "Check whether the retrieved passages contain sufficient correct evidence. Compare answers with retrieved context against answers with an oracle evidence set. If oracle context helps, retrieval may be limiting; if it does not, inspect prompting, reasoning, ambiguity, and evaluation."
+    ],
+    "takeaway": "Evaluate evidence availability separately from evidence use."
+  },
+  {
+    "id": "q72",
+    "type": "qa",
+    "topic": "LLM fundamentals",
+    "title": "Prompt injection in retrieved text",
+    "prompt": "Why should retrieved documents not be treated as trusted instructions?",
+    "answer": [
+      "External documents can contain adversarial instructions that conflict with the user’s task. Delimit evidence, enforce instruction priority, restrict tool permissions, and validate consequential outputs. Delimiters alone do not guarantee resistance."
+    ],
+    "takeaway": "Treat retrieved text as untrusted evidence."
+  },
+  {
+    "id": "q73",
+    "type": "qa",
+    "topic": "LLM fundamentals",
+    "title": "Structured output validation",
+    "prompt": "Does syntactically valid JSON imply a correct tool argument?",
+    "answer": [
+      "No. A schema can enforce types and structure but cannot establish that an identifier exists or an action is appropriate. Validate semantic constraints and authorization in application code, and handle parsing or validation failures explicitly."
+    ],
+    "takeaway": "Validate meaning and permissions after structure."
+  },
+  {
+    "id": "q74",
+    "type": "qa",
+    "topic": "LLM fundamentals",
+    "title": "Sampling temperature",
+    "prompt": "How does positive temperature affect token sampling?",
+    "answer": [
+      "Divide logits by temperature before softmax. Lower positive values concentrate mass on higher logits; higher values flatten the distribution. Temperature zero is normally implemented as a separate greedy choice, not literal division by zero."
+    ],
+    "takeaway": "Temperature changes the distribution; greedy decoding is a separate case."
+  },
+  {
+    "id": "q75",
+    "type": "qa",
+    "topic": "LLM fundamentals",
+    "title": "Top-p ordering",
+    "prompt": "Why can applying top-p before temperature differ from applying it afterward?",
+    "answer": [
+      "Top-p retains the smallest sorted prefix whose cumulative probability reaches a threshold. Temperature changes those probabilities and can change the retained set. Specify the operation order when reproducing decoding behavior."
+    ],
+    "takeaway": "Sampling transforms generally do not commute."
+  },
+  {
+    "id": "q76",
+    "type": "qa",
+    "topic": "LLM fundamentals",
+    "title": "Quantization calibration",
+    "prompt": "Why should quantization calibration data resemble deployment inputs?",
+    "answer": [
+      "Calibration estimates activation ranges or related statistics. Unrepresentative inputs can miss outliers and cause clipping or poor scaling at inference. Evaluate accuracy across target tasks and sequence lengths; weight-only quantization has different calibration needs from activation quantization."
+    ],
+    "takeaway": "Calibrate and evaluate for the actual quantization scheme and workload."
+  },
+  {
+    "id": "q77",
+    "type": "qa",
+    "topic": "LLM fundamentals",
+    "title": "Distillation targets",
+    "prompt": "What information can soft teacher distributions provide beyond hard labels?",
+    "answer": [
+      "They express relative probabilities across alternatives, including less likely tokens. Distillation can match these distributions, often with a temperature, but teacher errors and domain gaps remain. Matching only sampled teacher outputs provides a different signal from full-distribution distillation."
+    ],
+    "takeaway": "Specify whether distillation uses distributions or generated text."
+  },
+  {
+    "id": "q78",
+    "type": "qa",
+    "topic": "LLM fundamentals",
+    "title": "Benchmark contamination",
+    "prompt": "Why can benchmark overlap inflate measured LLM performance?",
+    "answer": [
+      "Training data may contain evaluation questions, solutions, or close paraphrases, allowing memorization to substitute for generalization. Audit data provenance and overlap, use fresh held-out tasks, and report uncertainty when training data is unavailable."
+    ],
+    "takeaway": "A held-out file is not necessarily held out from pretraining."
+  },
+  {
+    "id": "q79",
+    "type": "qa",
+    "topic": "LLM fundamentals",
+    "title": "Tool call evaluation",
+    "prompt": "What should an evaluation check beyond whether an LLM selected the correct tool name?",
+    "answer": [
+      "Check argument correctness, authorization, handling of tool failures, unnecessary calls, and whether the final response accurately reflects results. Evaluate multi-step outcomes in a controlled environment because a correct first call can still lead to failure."
+    ],
+    "takeaway": "Evaluate complete tool-assisted outcomes."
+  },
+  {
+    "id": "q80",
+    "type": "qa",
+    "topic": "LLM fundamentals",
+    "title": "Abstention and calibration",
+    "prompt": "Why is a fluent explanation not a reliable confidence score?",
+    "answer": [
+      "Fluency is learned language behavior and does not establish correctness. Evaluate confidence or abstention decisions against labeled outcomes, including distribution shifts. Use evidence checks and explicit uncertainty policies instead of treating persuasive wording as calibrated probability."
+    ],
+    "takeaway": "Measure confidence against correctness, not eloquence."
+  },
+  {
+    "id": "q81",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Stable log-softmax",
+    "prompt": "Return log probabilities for a nonempty list of finite logits without exponentiating large raw logits.",
+    "answer": [
+      "Shift logits before exponentiation. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Shift logits before exponentiation.",
+    "starterCode": "import math\n\ndef log_softmax(xs):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert all(abs(x+math.log(2))<1e-10 for x in log_softmax([1000.,1000.]))\n",
+    "solutionCode": "import math\n\ndef log_softmax(xs):\n    m=max(xs)\n    z=m+math.log(sum(math.exp(x-m) for x in xs))\n    return [x-z for x in xs]\n\nassert all(abs(x+math.log(2))<1e-10 for x in log_softmax([1000.,1000.]))\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q82",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Temperature distribution",
+    "prompt": "Return softmax probabilities; reject nonpositive temperature with ValueError.",
+    "answer": [
+      "Validate temperature before scaling. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Validate temperature before scaling.",
+    "starterCode": "import math\n\ndef temperature_probs(xs, temperature):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert temperature_probs([2.,2.],1.) == [0.5,0.5]\ntry: temperature_probs([1.],0.)\nexcept ValueError: pass\nelse: raise AssertionError(\"must reject zero\")\n",
+    "solutionCode": "import math\n\ndef temperature_probs(xs, temperature):\n    if temperature<=0: raise ValueError(\"positive temperature required\")\n    scaled=[x/temperature for x in xs]\n    m=max(scaled)\n    weights=[math.exp(x-m) for x in scaled]\n    return [x/sum(weights) for x in weights]\n\nassert temperature_probs([2.,2.],1.) == [0.5,0.5]\ntry: temperature_probs([1.],0.)\nexcept ValueError: pass\nelse: raise AssertionError(\"must reject zero\")\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q83",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Nucleus candidate set",
+    "prompt": "For normalized nonnegative probabilities and 0 < p <= 1, return indices in descending probability order through the first cumulative mass >= p. Keep at least one; break ties by input order.",
+    "answer": [
+      "Include the token that crosses the mass threshold. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Include the token that crosses the mass threshold.",
+    "starterCode": "import math\n\ndef nucleus(probs, p):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert nucleus([.1,.6,.3],.8)==[1,2]\nassert nucleus([.7,.3],.1)==[0]\n",
+    "solutionCode": "import math\n\ndef nucleus(probs, p):\n    if not 0<p<=1: raise ValueError(\"invalid p\")\n    result=[]\n    total=0.\n    for i in sorted(range(len(probs)), key=lambda i:-probs[i]):\n        result.append(i)\n        total+=probs[i]\n        if total>=p: break\n    return result\n\nassert nucleus([.1,.6,.3],.8)==[1,2]\nassert nucleus([.7,.3],.1)==[0]\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q84",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Shift next-token labels",
+    "prompt": "Given a sequence with at least two tokens, return input and next-token target lists.",
+    "answer": [
+      "Align every input position with its next token. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Align every input position with its next token.",
+    "starterCode": "import math\n\ndef shift_tokens(ids):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert shift_tokens([1,7,8,2])==([1,7,8],[7,8,2])\n",
+    "solutionCode": "import math\n\ndef shift_tokens(ids):\n    return ids[:-1],ids[1:]\n\nassert shift_tokens([1,7,8,2])==([1,7,8],[7,8,2])\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q85",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Assistant loss mask",
+    "prompt": "Average losses where the same-length binary mask is 1. Return 0.0 when no positions are selected.",
+    "answer": [
+      "Normalize by supervised tokens. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Normalize by supervised tokens.",
+    "starterCode": "import math\n\ndef masked_mean(losses, mask):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert masked_mean([9.,2.,4.],[0,1,1])==3.\nassert masked_mean([9.],[0])==0.\n",
+    "solutionCode": "import math\n\ndef masked_mean(losses, mask):\n    n=sum(mask)\n    return sum(x*m for x,m in zip(losses,mask))/n if n else 0.0\n\nassert masked_mean([9.,2.,4.],[0,1,1])==3.\nassert masked_mean([9.],[0])==0.\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q86",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Causal visibility",
+    "prompt": "Return an n by n Boolean list matrix with True for visible keys, including the diagonal.",
+    "answer": [
+      "Visibility includes the current position. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Visibility includes the current position.",
+    "starterCode": "import math\n\ndef causal_mask(n):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert causal_mask(3)==[[True,False,False],[True,True,False],[True,True,True]]\n",
+    "solutionCode": "import math\n\ndef causal_mask(n):\n    return [[j<=i for j in range(n)] for i in range(n)]\n\nassert causal_mask(3)==[[True,False,False],[True,True,False],[True,True,True]]\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q87",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Pad a token batch",
+    "prompt": "For a nonempty batch of token lists, right-pad to the longest length and return padded rows plus 1/0 attention masks. Empty rows are allowed.",
+    "answer": [
+      "Build masks from lengths, not token values. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Build masks from lengths, not token values.",
+    "starterCode": "import math\n\ndef pad_batch(batch, pad_id):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert pad_batch([[3,4],[]],0)==([[3,4],[0,0]],[[1,1],[0,0]])\n",
+    "solutionCode": "import math\n\ndef pad_batch(batch, pad_id):\n    width=max(map(len,batch))\n    return ([row+[pad_id]*(width-len(row)) for row in batch], [[1]*len(row)+[0]*(width-len(row)) for row in batch])\n\nassert pad_batch([[3,4],[]],0)==([[3,4],[0,0]],[[1,1],[0,0]])\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q88",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Prompt-free completion score",
+    "prompt": "Sum already aligned token log probabilities after prompt_length prompt tokens. Do not shift these values again.",
+    "answer": [
+      "Score only the intended completion positions. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Score only the intended completion positions.",
+    "starterCode": "import math\n\ndef completion_score(logps, prompt_length):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert abs(completion_score([-9.,-8.,-.2,-.3],2)+.5)<1e-10\n",
+    "solutionCode": "import math\n\ndef completion_score(logps, prompt_length):\n    return sum(logps[prompt_length:])\n\nassert abs(completion_score([-9.,-8.,-.2,-.3],2)+.5)<1e-10\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q89",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Perplexity from token losses",
+    "prompt": "Return exp(mean negative log likelihood) for a nonempty token-loss list.",
+    "answer": [
+      "Exponentiate the mean token loss. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Exponentiate the mean token loss.",
+    "starterCode": "import math\n\ndef perplexity(nlls):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert abs(perplexity([math.log(2),math.log(2)])-2)<1e-10\n",
+    "solutionCode": "import math\n\ndef perplexity(nlls):\n    return math.exp(sum(nlls)/len(nlls))\n\nassert abs(perplexity([math.log(2),math.log(2)])-2)<1e-10\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q90",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Greedy repetition penalty",
+    "prompt": "Return adjusted logits for penalty >= 1: divide positive seen-token logits by penalty and multiply negative ones. Apply once per unique seen index.",
+    "answer": [
+      "Handle signed logits and duplicate history tokens. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Handle signed logits and duplicate history tokens.",
+    "starterCode": "import math\n\ndef penalize(logits, seen, penalty):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert penalize([4.,-2.,1.],[0,0,1],2.)==[2.,-4.,1.]\n",
+    "solutionCode": "import math\n\ndef penalize(logits, seen, penalty):\n    out=list(logits)\n    for i in set(seen):\n        out[i]=out[i]/penalty if out[i]>0 else out[i]*penalty\n    return out\n\nassert penalize([4.,-2.,1.],[0,0,1],2.)==[2.,-4.,1.]\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q91",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "KV cache accounting",
+    "prompt": "Compute K plus V storage bytes, excluding allocator overhead and metadata.",
+    "answer": [
+      "Count both keys and values using KV heads. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Count both keys and values using KV heads.",
+    "starterCode": "import math\n\ndef kv_bytes(layers, kv_heads, head_dim, tokens, batch, bytes_per_element):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert kv_bytes(2,4,8,10,3,2)==7680\n",
+    "solutionCode": "import math\n\ndef kv_bytes(layers, kv_heads, head_dim, tokens, batch, bytes_per_element):\n    return 2*layers*kv_heads*head_dim*tokens*batch*bytes_per_element\n\nassert kv_bytes(2,4,8,10,3,2)==7680\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q92",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Chunk retrieval text",
+    "prompt": "Return overlapping token chunks. Require size > 0 and 0 <= overlap < size; avoid a trailing chunk entirely contained in the previous chunk. Empty input gives [].",
+    "answer": [
+      "Stop after a chunk reaches the end. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Stop after a chunk reaches the end.",
+    "starterCode": "import math\n\ndef chunks(tokens, size, overlap):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert chunks(list(range(6)),4,2)==[[0,1,2,3],[2,3,4,5]]\nassert chunks([],4,1)==[]\n",
+    "solutionCode": "import math\n\ndef chunks(tokens, size, overlap):\n    if size<=0 or not 0<=overlap<size: raise ValueError(\"invalid chunk settings\")\n    out=[]\n    start=0\n    while start<len(tokens):\n        out.append(tokens[start:start+size])\n        if start+size>=len(tokens): break\n        start+=size-overlap\n    return out\n\nassert chunks(list(range(6)),4,2)==[[0,1,2,3],[2,3,4,5]]\nassert chunks([],4,1)==[]\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q93",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Cosine retrieval score",
+    "prompt": "Return cosine similarity of equal-length vectors. Define the score as 0.0 if either vector has zero norm.",
+    "answer": [
+      "Handle zero vectors explicitly. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Handle zero vectors explicitly.",
+    "starterCode": "import math\n\ndef cosine(a, b):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert abs(cosine([1,0],[1,1])-1/math.sqrt(2))<1e-10\nassert cosine([0,0],[1,2])==0.\n",
+    "solutionCode": "import math\n\ndef cosine(a, b):\n    den=math.sqrt(sum(x*x for x in a)*sum(y*y for y in b))\n    return sum(x*y for x,y in zip(a,b))/den if den else 0.0\n\nassert abs(cosine([1,0],[1,1])-1/math.sqrt(2))<1e-10\nassert cosine([0,0],[1,2])==0.\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q94",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Reciprocal rank",
+    "prompt": "Return reciprocal rank of the first relevant document ID, or zero when none is retrieved. relevant is a set.",
+    "answer": [
+      "Ranks start at one. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Ranks start at one.",
+    "starterCode": "import math\n\ndef reciprocal_rank(ranked, relevant):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert reciprocal_rank([\"a\",\"b\",\"c\"],{\"b\",\"c\"})==.5\nassert reciprocal_rank([\"a\"],{\"z\"})==0.\n",
+    "solutionCode": "import math\n\ndef reciprocal_rank(ranked, relevant):\n    return next((1/i for i,doc in enumerate(ranked,1) if doc in relevant),0.0)\n\nassert reciprocal_rank([\"a\",\"b\",\"c\"],{\"b\",\"c\"})==.5\nassert reciprocal_rank([\"a\"],{\"z\"})==0.\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q95",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Discounted sequence returns",
+    "prompt": "Compute discounted reward-to-go at every step for 0 <= gamma <= 1. Empty input gives [].",
+    "answer": [
+      "Accumulate returns backward. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Accumulate returns backward.",
+    "starterCode": "import math\n\ndef returns(rewards, gamma):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert returns([0.,0.,1.],.5)==[.25,.5,1.]\nassert returns([],1.)==[]\n",
+    "solutionCode": "import math\n\ndef returns(rewards, gamma):\n    out=[0.]*len(rewards)\n    value=0.\n    for i in range(len(rewards)-1,-1,-1):\n        value=rewards[i]+gamma*value\n        out[i]=value\n    return out\n\nassert returns([0.,0.,1.],.5)==[.25,.5,1.]\nassert returns([],1.)==[]\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q96",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Group-relative rewards",
+    "prompt": "Center a nonempty reward group and divide by population standard deviation plus eps. Equal rewards must yield zeros.",
+    "answer": [
+      "Center within each prompt group. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Center within each prompt group.",
+    "starterCode": "import math\n\ndef group_advantages(rewards, eps=1e-8):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert group_advantages([3.,3.])==[0.,0.]\na=group_advantages([1.,3.]); assert a[0]<0<a[1] and abs(sum(a))<1e-10\n",
+    "solutionCode": "import math\n\ndef group_advantages(rewards, eps=1e-8):\n    mean=sum(rewards)/len(rewards)\n    sd=math.sqrt(sum((r-mean)**2 for r in rewards)/len(rewards))\n    return [(r-mean)/(sd+eps) for r in rewards]\n\nassert group_advantages([3.,3.])==[0.,0.]\na=group_advantages([1.,3.]); assert a[0]<0<a[1] and abs(sum(a))<1e-10\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q97",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "PPO clipped objective",
+    "prompt": "Return the scalar objective to maximize: min(ratio*A, clipped_ratio*A). Inputs are finite and epsilon is in (0,1).",
+    "answer": [
+      "The sign of advantage matters when taking the minimum. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "The sign of advantage matters when taking the minimum.",
+    "starterCode": "import math\n\ndef ppo_term(new_logp, old_logp, advantage, epsilon):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert abs(ppo_term(math.log(1.5),0.,2.,.2)-2.4)<1e-10\nassert abs(ppo_term(math.log(1.5),0.,-2.,.2)+3.)<1e-10\n",
+    "solutionCode": "import math\n\ndef ppo_term(new_logp, old_logp, advantage, epsilon):\n    ratio=math.exp(new_logp-old_logp)\n    clipped=max(1-epsilon,min(1+epsilon,ratio))\n    return min(ratio*advantage,clipped*advantage)\n\nassert abs(ppo_term(math.log(1.5),0.,2.,.2)-2.4)<1e-10\nassert abs(ppo_term(math.log(1.5),0.,-2.,.2)+3.)<1e-10\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q98",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "DPO pair loss",
+    "prompt": "Given sequence log-probability sums and positive beta, compute -log sigmoid(beta*((chosen-rejected)-(ref_chosen-ref_rejected))) stably.",
+    "answer": [
+      "Subtract the reference margin and use stable softplus. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Subtract the reference margin and use stable softplus.",
+    "starterCode": "import math\n\ndef dpo_loss(chosen, rejected, ref_chosen, ref_rejected, beta):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert abs(dpo_loss(-2.,-3.,-2.,-3.,.1)-math.log(2))<1e-10\nassert math.isfinite(dpo_loss(-2000.,0.,0.,0.,1.))\n",
+    "solutionCode": "import math\n\ndef dpo_loss(chosen, rejected, ref_chosen, ref_rejected, beta):\n    z=beta*((chosen-rejected)-(ref_chosen-ref_rejected))\n    return max(0.,-z)+math.log1p(math.exp(-abs(z)))\n\nassert abs(dpo_loss(-2.,-3.,-2.,-3.,.1)-math.log(2))<1e-10\nassert math.isfinite(dpo_loss(-2000.,0.,0.,0.,1.))\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q99",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Exact categorical KL",
+    "prompt": "For normalized distributions with q strictly positive, compute KL(p || q). Treat zero-p terms as zero.",
+    "answer": [
+      "Weight log ratios by the first distribution. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Weight log ratios by the first distribution.",
+    "starterCode": "import math\n\ndef categorical_kl(p, q):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert abs(categorical_kl([1.,0.],[.5,.5])-math.log(2))<1e-10\nassert categorical_kl([.5,.5],[.5,.5])==0.\n",
+    "solutionCode": "import math\n\ndef categorical_kl(p, q):\n    return sum(x*math.log(x/y) for x,y in zip(p,q) if x>0)\n\nassert abs(categorical_kl([1.,0.],[.5,.5])-math.log(2))<1e-10\nassert categorical_kl([.5,.5],[.5,.5])==0.\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
+  },
+  {
+    "id": "q100",
+    "type": "coding",
+    "topic": "LLM coding",
+    "title": "Low-rank update dimensions",
+    "prompt": "Return the number of trainable entries in A of shape (rank,in_features) and B of shape (out_features,rank), without bias.",
+    "answer": [
+      "Both low-rank factors contribute trainable parameters. The reference implementation below follows the stated input contract."
+    ],
+    "takeaway": "Both low-rank factors contribute trainable parameters.",
+    "starterCode": "import math\n\ndef lora_parameters(in_features, out_features, rank):\n    # TODO: implement the operation described above.\n    raise NotImplementedError\n\nassert lora_parameters(100,200,4)==1200\n",
+    "solutionCode": "import math\n\ndef lora_parameters(in_features, out_features, rank):\n    return rank*(in_features+out_features)\n\nassert lora_parameters(100,200,4)==1200\n",
+    "checks": [
+      "Run the supplied assertions, then add a case with different inputs.",
+      "Explain the input contract and the normalization or boundary rule used."
+    ]
   }
 ];

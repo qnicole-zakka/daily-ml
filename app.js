@@ -1,13 +1,32 @@
 (() => {
   'use strict';
   const questions = window.QUESTION_BANK;
-  const topics = ['Basic deep learning', 'Transformers', 'LLM fine-tuning', 'LLM inference'];
+  const topics = [...new Set(questions.map(question => question.topic))];
   const today = new Date();
   const day = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86400000);
-  const concepts = questions.filter(question => question.type === 'qa');
-  const coding = questions.filter(question => question.type === 'coding');
-  const daily = [0, 1, 2].map(offset => concepts[(day + offset) % concepts.length]);
-  daily.push(coding[day % coding.length]);
+  // Everything outside basic deep learning belongs to the LLM rotation,
+  // including transformers and reinforcement learning for language models.
+  const basic = question => question.topic === 'Basic deep learning';
+  const pool = (type, isBasic) => questions.filter(question =>
+    question.type === type && basic(question) === isBasic);
+  const pick = (bank, count) => Array.from({ length: count }, (_, offset) =>
+    bank[(day * count + offset) % bank.length]);
+  const daily = [
+    ...pick(pool('qa', true), 2),
+    ...pick(pool('qa', false), 2),
+    ...pick(pool('coding', true), 1),
+    ...pick(pool('coding', false), 1)
+  ];
+
+  const storageKey = 'daily-ml-practiced-v1';
+  let practiced;
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    practiced = new Set(Array.isArray(saved) ? saved.filter(id => questions.some(q => q.id === id)) : []);
+  } catch {
+    practiced = new Set();
+  }
+  let storageAvailable = true;
 
   function element(tag, className, text) {
     const node = document.createElement(tag);
@@ -24,7 +43,7 @@
     return pre;
   }
 
-  function card(question, index) {
+  function card(question, index, showCheckbox = false) {
     const article = element('article', 'question-card');
     article.dataset.questionId = question.id;
     const meta = element('div', 'card-meta');
@@ -56,25 +75,60 @@
     answer.append(takeaway);
     details.append(summary, answer);
     article.append(details);
+    if (showCheckbox) {
+      const label = element('label', 'practice-check');
+      const checkbox = element('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = practiced.has(question.id);
+      checkbox.dataset.practicedId = question.id;
+      checkbox.setAttribute('aria-label', `Practiced: ${question.title}`);
+      checkbox.addEventListener('change', () => {
+        if (checkbox.checked) practiced.add(question.id);
+        else practiced.delete(question.id);
+        try {
+          localStorage.setItem(storageKey, JSON.stringify([...practiced]));
+          storageAvailable = true;
+        } catch {
+          storageAvailable = false;
+        }
+        document.querySelectorAll('input[data-practiced-id]').forEach(input => {
+          input.checked = practiced.has(input.dataset.practicedId);
+        });
+        renderPracticed();
+      });
+      label.append(checkbox, element('span', '', 'Practiced'));
+      article.append(label);
+    }
     return article;
   }
 
   function render(containerId, bank) {
-    document.getElementById(containerId).replaceChildren(...bank.map(card));
+    document.getElementById(containerId).replaceChildren(...bank.map((question, index) => card(question, index, containerId !== 'archive-questions')));
   }
 
   document.getElementById('today-date').textContent = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric' }).format(today).toUpperCase();
   render('today-questions', daily);
 
   function showView(view) {
-    const isToday = view === 'today';
-    document.getElementById('today-view').hidden = !isToday;
-    document.getElementById('archive-view').hidden = isToday;
-    document.getElementById('today-button').setAttribute('aria-pressed', String(isToday));
-    document.getElementById('archive-button').setAttribute('aria-pressed', String(!isToday));
+    ['today', 'archive', 'practiced'].forEach(name => {
+      document.getElementById(`${name}-view`).hidden = view !== name;
+      document.getElementById(`${name}-button`).setAttribute('aria-pressed', String(view === name));
+    });
   }
-  document.getElementById('today-button').addEventListener('click', () => showView('today'));
-  document.getElementById('archive-button').addEventListener('click', () => showView('archive'));
+  ['today', 'archive', 'practiced'].forEach(view => {
+    document.getElementById(`${view}-button`).addEventListener('click', () => showView(view));
+  });
+
+  function renderPracticed() {
+    const selected = questions.filter(question => practiced.has(question.id));
+    render('practiced-questions', selected);
+    document.getElementById('practiced-count').textContent = `${selected.length} ${selected.length === 1 ? 'question' : 'questions'}`;
+    document.getElementById('practiced-empty').hidden = selected.length > 0;
+    document.getElementById('practiced-storage-note').textContent = storageAvailable
+      ? 'Saved in this browser. Uncheck a question to remove it from Practiced.'
+      : 'Browser storage is unavailable. These checks will last only while this page stays open.';
+  }
+  renderPracticed();
 
   function filterArchive(topic) {
     const selected = topic === 'All topics' ? questions : questions.filter(question => question.topic === topic);
