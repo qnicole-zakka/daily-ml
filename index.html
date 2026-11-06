@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4ef">
+  <meta name="description" content="A small daily practice bank for deep learning, transformers, LLM fine-tuning and inference.">
+  <title>ML / AI Daily</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="questions.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to practice</a>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="ML AI Daily home">ML / AI <span>DAILY</span></a>
+    <span class="edition">Practice bank · v0</span>
+  </header>
+  <main id="main">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">A LITTLE PRACTICE, EVERY DAY</p>
+      <h1 id="page-title">Keep your knowledge<br><span>in working order.</span></h1>
+      <p class="intro-copy">Think first. Reveal the answer. Build your intuition for deep learning and LLMs, one question at a time.</p>
+      <div class="bank-stats" aria-label="Question bank contents">
+        <span><strong>35</strong> concept cards</span>
+        <span><strong>15</strong> coding exercises</span>
+        <span><strong>04</strong> topics</span>
+      </div>
+    </section>
+    <nav class="view-nav" aria-label="Practice views">
+      <button type="button" id="today-button" aria-pressed="true" aria-controls="today-view">Today’s practice</button>
+      <button type="button" id="archive-button" aria-pressed="false" aria-controls="archive-view">Topic archive</button>
+    </nav>
+    <section id="today-view" aria-labelledby="today-title">
+      <div class="section-heading">
+        <div><p class="eyebrow" id="today-date"></p><h2 id="today-title">Today’s practice</h2></div>
+        <p>3 concept cards + 1 coding exercise</p>
+      </div>
+      <p class="section-note">The selection changes each day. Questions return as the bank rotates.</p>
+      <div class="question-list" id="today-questions"></div>
+    </section>
+    <section id="archive-view" aria-labelledby="archive-title" hidden>
+      <div class="section-heading">
+        <div><p class="eyebrow">ALL 50 QUESTIONS</p><h2 id="archive-title">Topic archive</h2></div>
+        <p id="archive-count" aria-live="polite"></p>
+      </div>
+      <p class="section-note">Revisit any question, including ones from previous daily selections.</p>
+      <div id="topic-filters" class="topic-filters" aria-label="Filter by topic"></div>
+      <div class="question-list" id="archive-questions"></div>
+    </section>
+    <noscript><p class="noscript">Enable JavaScript to load the question bank and reveal answers.</p></noscript>
+  </main>
+  <footer><span>Small steps. Stronger foundations.</span><span>Python / PyTorch exercises · run code in your own environment.</span></footer>
+</body>
+</html>
