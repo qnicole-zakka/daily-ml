@@ -2,9 +2,9 @@
 
 A small browser-based practice bank with 35 concept Q&As and 15 Python/PyTorch coding exercises. Topics: basic deep learning, transformers, LLM fine-tuning, and LLM inference.
 
-Repository: https://github.com/gracequeen/MLAI-Armory
+Repository: https://github.com/qnicole-zakka/MLAI-Armory
 
-Practice website: https://gracequeen.github.io/MLAI-Armory/
+Practice website: https://qnicole-zakka.github.io/MLAI-Armory/
 
 ## Study
 
@@ -14,7 +14,7 @@ The site has no account, server, build step, external fonts, or tracking. It doe
 
 ## Publish on GitHub Pages
 
-1. Put `index.html`, `styles.css`, `app.js`, `questions.js`, and `.nojekyll` in the root of a GitHub repository. A public repository supports GitHub Pages on GitHub Free.
+1. Put `index.html`, `style.css`, `app.js`, `questions.js`, in the root of a GitHub repository. A public repository supports GitHub Pages on GitHub Free.
 2. In the repository, open **Settings → Pages**.
 3. Under **Build and deployment**, choose **Deploy from a branch**.
 4. Choose your branch (usually `main`) and **/ (root)**, then save.
