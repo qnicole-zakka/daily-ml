@@ -2,9 +2,9 @@
 
 A small browser-based practice bank with 35 concept Q&As and 15 Python/PyTorch coding exercises. Topics: basic deep learning, transformers, LLM fine-tuning, and LLM inference.
 
-Repository: https://github.com/qnicole-zakka/MLAI-Armory
+Repository: https://github.com/qnicole-zakka/daily-ml
 
-Practice website: https://qnicole-zakka.github.io/MLAI-Armory/
+Practice website: https://qnicole-zakka.github.io/daily-ml
 
 ## Study
 
