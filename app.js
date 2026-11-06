@@ -97,13 +97,13 @@
         renderPracticed();
       });
       label.append(checkbox, element('span', '', 'Practiced'));
-      article.append(label);
+      article.prepend(label);
     }
     return article;
   }
 
   function render(containerId, bank) {
-    document.getElementById(containerId).replaceChildren(...bank.map((question, index) => card(question, index, containerId !== 'archive-questions')));
+    document.getElementById(containerId).replaceChildren(...bank.map((question, index) => card(question, index, true)));
   }
 
   document.getElementById('today-date').textContent = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric' }).format(today).toUpperCase();

@@ -83,6 +83,6 @@ footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12
   pre { padding: 14px; font-size: 12px; }
 }
 
-.practice-check { display: flex; align-items: center; gap: 10px; width: fit-content; min-height: 44px; margin-top: 16px; font-weight: 650; color: var(--green); cursor: pointer; }
+.practice-check { display: flex; align-items: center; gap: 10px; width: fit-content; min-height: 44px; margin: 0 0 16px; font-weight: 650; color: var(--green); cursor: pointer; }
 .practice-check input { width: 20px; height: 20px; margin: 0; accent-color: var(--green); cursor: pointer; }
 .practice-check input:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }

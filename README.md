@@ -32,4 +32,4 @@ To serve it locally: `python3 -m http.server 8765 --directory .`, then open `htt
 
 The LLM daily pool includes every topic except Basic deep learning. The 20 new LLM coding exercises use standard Python; existing exercises may require PyTorch.
 
-Check **Practiced** on any daily question to keep it in the **Practiced** tab across days and reloads. Uncheck it in either view to remove it. Clearing browser data removes this history.
+Check **Practiced** at the top of any daily or archive question to keep it in the **Practiced** tab across days and reloads. Uncheck it in either view to remove it. Clearing browser data removes this history.
