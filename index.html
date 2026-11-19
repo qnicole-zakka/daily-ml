@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#f5f4ef">
   <meta name="description" content="A small daily practice bank for deep learning, transformers, LLM fine-tuning and inference.">
   <title>ML / AI Daily</title>
-  <link rel="stylesheet" href="styles.css?v=big-coding-1">
+  <link rel="stylesheet" href="styles.css?v=big-coding-2">
   <script src="questions.js?v=bank-100" defer></script>
-  <script src="app.js?v=big-coding-1" defer></script>
+  <script src="app.js?v=big-coding-2" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to practice</a>
@@ -66,6 +66,17 @@
       </div>
       <p class="section-note">Longer projects with implementation prompts, correctness tests, reference solutions, and experiments. Save a copy in Drive to keep your work.</p>
       <article class="question-card">
+        <div class="card-meta"><span class="type-badge coding">Notebook</span><span>Transformers · 60–90 minutes</span></div>
+        <h3>Multi-head self-attention from scratch</h3>
+        <p>Implement causal multi-head self-attention and verify both outputs and gradients against PyTorch.</p>
+        <p class="section-note">CPU friendly · No model downloads · Prerequisites: tensor shapes, softmax, and autograd</p>
+        <ol class="notebook-outline"><li>Problem and tensor shapes</li><li>Your implementation with TODOs</li><li>Output, masking, and gradient tests</li><li>Folded sample solution with line-by-line comments</li><li>Attention inspection and memory accounting</li></ol>
+        <div class="notebook-actions">
+          <a class="colab-link" href="https://colab.research.google.com/github/qnicole-zakka/daily-ml/blob/main/notebooks/self-attention.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab ↗</a>
+          <a href="notebooks/self-attention.ipynb" download>Download notebook</a>
+        </div>
+      </article>
+      <article class="question-card">
         <div class="card-meta"><span class="type-badge coding">Notebook</span><span>LLM inference · 60–90 minutes</span></div>
         <h3>KV cache from scratch</h3>
         <p>Implement prefill and incremental causal attention in PyTorch. Prove cached outputs match full attention, then compare decoding time and cache memory.</p>
@@ -80,6 +91,17 @@
         <div class="notebook-actions">
           <a class="colab-link" href="https://colab.research.google.com/github/qnicole-zakka/daily-ml/blob/main/notebooks/kv-cache.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab ↗</a>
           <a href="notebooks/kv-cache.ipynb" download>Download notebook</a>
+        </div>
+      </article>
+      <article class="question-card">
+        <div class="card-meta"><span class="type-badge coding">Notebook</span><span>LLM fine-tuning · 90–120 minutes</span></div>
+        <h3>LoRA supervised fine-tuning</h3>
+        <p>Build low-rank adapters and completion-only SFT for a tiny causal language model. Verify frozen weights, train adapters, and save and reload them.</p>
+        <p class="section-note">CPU friendly · No model downloads · Prerequisites: self-attention and PyTorch training loops</p>
+        <ol class="notebook-outline"><li>Adapter equation and label-masking contract</li><li>Your implementation with TODOs</li><li>LoRA and completion-boundary tests</li><li>Folded sample solution with line-by-line comments</li><li>SFT experiment and adapter checkpoint round trip</li></ol>
+        <div class="notebook-actions">
+          <a class="colab-link" href="https://colab.research.google.com/github/qnicole-zakka/daily-ml/blob/main/notebooks/lora-sft.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab ↗</a>
+          <a href="notebooks/lora-sft.ipynb" download>Download notebook</a>
         </div>
       </article>
     </section>

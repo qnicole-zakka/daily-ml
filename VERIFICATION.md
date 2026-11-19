@@ -1,3 +1,12 @@
+# Notebook additions — November 18, 2026
+
+- Added self-attention and LoRA SFT notebooks and website cards; annotated the KV cache sample solution line by line.
+- Executed all three reference notebooks on CPU with PyTorch 2.15.0 in a temporary environment. Skipped the intentionally incomplete TODO cells and student-test invocations; ran the same harnesses against the reference functions.
+- Self-attention: output and input/weight gradient agreement with PyTorch, probability normalization, causal masking, first-token behavior, and future isolation pass.
+- KV cache: prefill, token/chunk decode, cache preservation, causal isolation, and timing experiment pass.
+- LoRA SFT: adapter initialization/scaling/freezing, completion-mask boundaries, ignored-token loss, unchanged base weights, finite gradients, loss reduction (22.9580 to 0.0019 on training examples), and adapter save/reload pass. This is a tiny synthetic task, not a generalization benchmark.
+- All code cells parse; notebook cell IDs are unique; folded-solution metadata and local website/download targets verified. Browser rendering and interactive Colab folding have not been visually verified.
+
 # Big coding update — November 18, 2026
 
 - Added the Big coding tab with one KV cache notebook; LoRA SFT and PPO await review.
