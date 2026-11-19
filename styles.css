@@ -86,3 +86,8 @@ footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12
 .practice-check { display: flex; align-items: center; gap: 10px; width: fit-content; min-height: 44px; margin: 0 0 16px; font-weight: 650; color: var(--green); cursor: pointer; }
 .practice-check input { width: 20px; height: 20px; margin: 0; accent-color: var(--green); cursor: pointer; }
 .practice-check input:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }
+
+.notebook-outline { padding-left: 22px; line-height: 1.8; }
+.notebook-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 22px; }
+.colab-link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 7px; background: var(--green); color: white; font-weight: 650; text-decoration: none; }
+.colab-link:hover { background: #1c4839; }

@@ -33,3 +33,7 @@ To serve it locally: `python3 -m http.server 8765 --directory .`, then open `htt
 The LLM daily pool includes every topic except Basic deep learning. The 20 new LLM coding exercises use standard Python; existing exercises may require PyTorch.
 
 Check **Practiced** at the top of any daily or archive question to keep it in the **Practiced** tab across days and reloads. Uncheck it in either view to remove it. Clearing browser data removes this history.
+
+## Big coding
+
+The Big coding tab opens longer exercises in Google Colab. Start with `notebooks/kv-cache.ipynb`: a CPU-friendly PyTorch attention project with a TODO implementation, correctness tests, a separate reference solution, and a timing experiment. Save a copy in Drive before editing. The starter test intentionally fails until implemented. The Colab link loads the notebook from the public `main` branch, so new notebooks must be pushed before the link works. Include the `notebooks/` folder when publishing. LoRA SFT and PPO are deferred pending review of this first problem.

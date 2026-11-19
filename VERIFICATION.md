@@ -1,3 +1,10 @@
+# Big coding update — November 18, 2026
+
+- Added the Big coding tab with one KV cache notebook; LoRA SFT and PPO await review.
+- Verified notebook JSON structure, unique cell IDs, Python code-cell syntax, and local HTML asset/download targets.
+- JavaScript syntax and simulated DOM navigation pass, including returning to the six daily cards.
+- PyTorch is not installed in the local Python environment, so notebook numerical tests and benchmarks have not been executed. Browser layout and live Colab loading have not been verified. Colab requires the notebook to be pushed to the public main branch.
+
 # Current update verification
 
 Verified on November 5, 2026 using JavaScript DOM simulation and Python execution.

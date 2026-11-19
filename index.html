@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#f5f4ef">
   <meta name="description" content="A small daily practice bank for deep learning, transformers, LLM fine-tuning and inference.">
   <title>ML / AI Daily</title>
-  <link rel="stylesheet" href="styles.css?v=practiced-2">
+  <link rel="stylesheet" href="styles.css?v=big-coding-1">
   <script src="questions.js?v=bank-100" defer></script>
-  <script src="app.js?v=practiced-2" defer></script>
+  <script src="app.js?v=big-coding-1" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to practice</a>
@@ -31,6 +31,7 @@
       <button type="button" id="today-button" aria-pressed="true" aria-controls="today-view">Today’s practice</button>
       <button type="button" id="archive-button" aria-pressed="false" aria-controls="archive-view">Topic archive</button>
       <button type="button" id="practiced-button" aria-pressed="false" aria-controls="practiced-view">Practiced</button>
+      <button type="button" id="big-coding-button" aria-pressed="false" aria-controls="big-coding-view">Big coding</button>
     </nav>
     <section id="today-view" aria-labelledby="today-title">
       <div class="section-heading">
@@ -57,6 +58,30 @@
       <p class="section-note" id="practiced-storage-note"></p>
       <p id="practiced-empty">No practiced questions yet. Check a question in Today’s practice to save it here.</p>
       <div class="question-list" id="practiced-questions"></div>
+    </section>
+    <section id="big-coding-view" aria-labelledby="big-coding-title" hidden>
+      <div class="section-heading">
+        <div><p class="eyebrow">BUILD IT FROM SCRATCH</p><h2 id="big-coding-title">Big coding</h2></div>
+        <p>Colab notebook exercises</p>
+      </div>
+      <p class="section-note">Longer projects with implementation prompts, correctness tests, reference solutions, and experiments. Save a copy in Drive to keep your work.</p>
+      <article class="question-card">
+        <div class="card-meta"><span class="type-badge coding">Notebook</span><span>LLM inference · 60–90 minutes</span></div>
+        <h3>KV cache from scratch</h3>
+        <p>Implement prefill and incremental causal attention in PyTorch. Prove cached outputs match full attention, then compare decoding time and cache memory.</p>
+        <p class="section-note">CPU friendly · No model downloads · Prerequisites: attention and PyTorch tensor shapes</p>
+        <ol class="notebook-outline">
+          <li>Problem, tensor shapes, and cache contract</li>
+          <li>Your implementation with TODOs</li>
+          <li>Tests for prefill, decode, chunking, and causality</li>
+          <li>Reference solution</li>
+          <li>Timing experiment and review questions</li>
+        </ol>
+        <div class="notebook-actions">
+          <a class="colab-link" href="https://colab.research.google.com/github/qnicole-zakka/daily-ml/blob/main/notebooks/kv-cache.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab ↗</a>
+          <a href="notebooks/kv-cache.ipynb" download>Download notebook</a>
+        </div>
+      </article>
     </section>
     <noscript><p class="noscript">Enable JavaScript to load the question bank and reveal answers.</p></noscript>
   </main>

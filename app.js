@@ -110,12 +110,12 @@
   render('today-questions', daily);
 
   function showView(view) {
-    ['today', 'archive', 'practiced'].forEach(name => {
+    ['today', 'archive', 'practiced', 'big-coding'].forEach(name => {
       document.getElementById(`${name}-view`).hidden = view !== name;
       document.getElementById(`${name}-button`).setAttribute('aria-pressed', String(view === name));
     });
   }
-  ['today', 'archive', 'practiced'].forEach(view => {
+  ['today', 'archive', 'practiced', 'big-coding'].forEach(view => {
     document.getElementById(`${view}-button`).addEventListener('click', () => showView(view));
   });
 
